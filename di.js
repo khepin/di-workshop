@@ -13,7 +13,7 @@ function Di(){
      * @param  {mixed} value
      */
     this.constant = function(name, value) {
-        // Your code goes here
+        this.definitions[name] = value;
     };
 
     /**
@@ -22,6 +22,6 @@ function Di(){
      * @return {mixed}
      */
     this.get = function(name) {
-        // Your code goes here
+        return this.definitions[name];
     }
 };
