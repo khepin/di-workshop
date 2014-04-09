@@ -13,9 +13,7 @@ function Di(){
      * @param  {mixed} value
      */
     this.constant = function(name, value) {
-        this.definitions[name] = {
-            value: value
-        };
+        this.definitions[name] = value;
     };
 
     /**
@@ -24,10 +22,7 @@ function Di(){
      * @return {mixed}
      */
     this.get = function(name) {
-        if (!this.definitions[name]) {
-            return;
-        }
-        return this.definitions[name].value || this.definitions[name].creator();
+        return this.definitions[name];
     }
 
     /**
@@ -36,8 +31,6 @@ function Di(){
      * @param {function} callable The function that will create the service
      */
     this.set = function(name, callable) {
-        this.definitions[name] = {
-            creator: callable
-        };
+        // Your code goes here
     };
 };
