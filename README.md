@@ -54,3 +54,4 @@ function Dog(){};
 di.set('dog', function(){return new Dog();});
 di.set('url', function(){return window.location;});
 ```
+You **might** have to modify the code that is currently in **di.js** as the solution from the previous step might not be enough for you at this step.
