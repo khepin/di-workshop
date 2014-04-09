@@ -54,3 +54,28 @@ function Dog(){};
 di.set('dog', function(){return new Dog();});
 di.set('url', function(){return window.location;});
 ```
+You **might** have to modify the code that is currently in **di.js** as the solution from the previous step might not be enough for you at this step.
+
+## Step 3 (dependencies, NO circular ones)
+
+In this step, our services can have dependencies. The dependencies will be defined as follow:
+
+```js
+function Bean(){}
+function Grinder(){}
+function Water(){}
+
+di.set('bean', function(){return new Bean();});
+di.set('grinder', function(){return new Grinder();});
+di.set('water', function(){return new Water();});
+
+function makeCoffee(beans, grinder, water) {
+    // ...
+}
+makeCoffee.inject = ['bean', 'grinder', 'water'];
+
+di.set('coffee', makeCoffee);
+di.get('coffee');
+```
+
+You are not (yet) expected to deal with circular dependencies.
