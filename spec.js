@@ -87,4 +87,87 @@ describe('di', function(){
             expect(di.get('dog')).not.toBe(rufus);
         });
     });
+
+    describe('after step 3', function(){
+        function Bean(){}
+        function Grinder(){}
+        function Water(){}
+
+        it('can create a service that has service dependencies', function(){
+            var di = new Di();
+            var counter = 0;
+            di.set('bean', function(){
+                counter ++;
+                return new Bean();
+            });
+            di.set('grinder', function(){return new Grinder();});
+            di.set('water', function(){return new Water();});
+            di.set('mike', function(){return 'mike';});
+
+            var b, g, w, m;
+
+            function makeCoffee(bean, grinder, water, mike) {
+                b = bean;
+                g = grinder;
+                w = water;
+                m = mike;
+            }
+            makeCoffee.inject = ['bean', 'grinder', 'water', 'mike'];
+
+
+            di.set('coffee', makeCoffee);
+            di.get('coffee');
+
+            expect(counter).toBe(1);
+            expect(b instanceof Bean).toBe(true);
+            expect(g instanceof Grinder).toBe(true);
+            expect(w instanceof Water).toBe(true);
+            expect(m).toBe('mike');
+        });
+
+        it('can create a service that has constant dependencies', function(){
+            var di = new Di();
+
+            di.constant('captain_age', 42);
+            function answer(age) {
+                return age;
+            };
+
+            answer.inject = ['captain_age'];
+            di.set('the_answer', answer);
+
+            expect(di.get('the_answer')).toBe(42);
+        });
+
+        it('can work out simple dependencies', function(){
+            var di = new Di();
+
+            di.set('captain_age', function(){return 42;});
+            function answer(age) {
+                return age;
+            };
+
+            answer.inject = ['captain_age'];
+            di.set('the_answer', answer);
+
+            expect(di.get('the_answer')).toBe(42);
+        });
+
+        it('deals with multi-level dependencies', function(){
+            var di = new Di();
+
+            function realCaptainAge() {return 42;}
+            di.set('real_captain_age', realCaptainAge);
+
+            function captainAge(realAge) {return realAge;}
+            captainAge.inject = ['real_captain_age'];
+            di.set('captain_age', captainAge);
+
+            function howOld(age) {return age;}
+            howOld.inject = ['captain_age'];
+            di.set('how_old', howOld);
+
+            expect(di.get('how_old')).toBe(42);
+        });
+    });
 });
