@@ -24,10 +24,24 @@ function Di(){
      * @return {mixed}
      */
     this.get = function(name) {
-        if (!this.definitions[name]) {
+        var definition = this.definitions[name];
+        if (!definition) {
             return;
         }
-        return this.definitions[name].value || this.definitions[name].creator();
+
+        if (definition.value) {
+            return definition.value;
+        }
+
+        var dependencies = definition.dependencies;
+        var arguments = [];
+        if (dependencies) {
+            for (var i = 0; i < dependencies.length; i++) {
+                arguments.push(this.get(dependencies[i]));
+            }
+        }
+
+        return definition.creator.apply(undefined, arguments);
     }
 
     /**
@@ -37,7 +51,8 @@ function Di(){
      */
     this.set = function(name, callable) {
         this.definitions[name] = {
-            creator: callable
+            creator: callable,
+            dependencies: callable.inject
         };
     };
 };
