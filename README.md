@@ -133,3 +133,48 @@ Because they are simpler to build, we built non-shared services first, however 9
 
 In this step you need to implement the **di.share()** function. It works exactly the same as the **di.set()** function but later when using **di.get()** you always get the same instance of your service.
 
+## Going further
+
+Different DI containers have different abilities, here are some that you might find interesting to implement:
+
+### tags
+
+You can tag services in order to later retrieve more than one at a time. For example:
+
+```js
+var di = new Di();
+
+function Coffee(){}
+Coffee.tags = ['hot_beverage']
+function Tea(){}
+Tea.tags = ['hot_beverage']
+function Chocolate(){}
+Chocolate.tags = ['hot_beverage']
+
+di.set('coffee', Coffee)
+di.set('tea', Tea)
+di.set('chocolate', Chocolate)
+
+function Menu(hotBeverages) {}
+Menu.inject = ['hot_beverages'];
+
+di.set('menu', Menu);
+
+di.get('menu');
+```
+
+Here the menu would have access to anything that is tagged as a `hot_beverage`
+
+## private services
+
+Some services shouldn't be exposed through **di.get()**. They're not here for the user, but only as a dependency for some other services.
+
+## alternative syntax
+
+Angular uses this syntax for dependency which is shorter to write, but a _little_ bit more troublesome to implement:
+
+```js
+di.set('name', ['dependency_1', 'dependency_2', function(dep1, dep2) {}]);
+```
+
+## other languages
