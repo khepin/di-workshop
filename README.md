@@ -29,3 +29,15 @@ You are currently on the master branch, you need to switch to the `step_1` branc
 ```sh
 git checkout step_1
 ```
+
+## Step 1 (constants)
+
+Our container will offer 3 ways to set a service to be shared. And we'll build them step by step by gradual difficulty.
+
+ * **di.constant(name, value)** will register a constant that can be returned directly and doesn't need to be instantiated
+ * **di.set(name, service_definition)** will register a service for which a new instance will be created each time we call it
+ * **di.share(name, service_definition)** will register a service for which a single instance is created and then always returned
+
+There will always be only one way to retrieve a service: **di.get(name)**.
+
+The goal of this step is to implement the simple constant and get method, without any dependencies (to be clear, it is not possible anyway to have constants and dependencies). The specs are already defined, all you have to do is fill in the necessary code in **di.js** in order to make the tests pass.
