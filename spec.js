@@ -208,4 +208,26 @@ describe('di', function(){
             }).not.toThrow(new Error('Circular dependencies.'));
         });
     });
+
+    describe('after step 5', function(){
+        it('can share a service', function(){
+            var di = new Di();
+
+            function A(b, c){return {b_knows: b, c_knows: c};}
+            function B(c){ return ['I am B', c[0]];}
+            function C(){ return ['I am C'];}
+
+            A.inject = ['b', 'c']
+            B.inject = ['c']
+
+            di.share('a', A);
+            di.share('b', B);
+            di.share('c', C);
+
+            var a = di.get('a');
+            expect(di.get('a')).toBe(a);
+            expect(di.get('a')).toBe(a);
+            expect(di.get('a')).toBe(a);
+        });
+    });
 });

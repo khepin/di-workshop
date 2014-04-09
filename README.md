@@ -126,3 +126,10 @@ At this step, we have added the lodash library for convenience. There are 2 func
 _.contains(['a', 'b', 'c'], 'c');  // Returns true if the array (first argument) contains the element (second argument)
 _.clone(object) // Returns a copy of the object / array / function that was passed to it.
 ```
+
+## Step 5 (shared services)
+
+Because they are simpler to build, we built non-shared services first, however 99% of the time when using DI, you want to use shared services. The container should always return you the same instance of a service after the first time.
+
+In this step you need to implement the **di.share()** function. It works exactly the same as the **di.set()** function but later when using **di.get()** you always get the same instance of your service.
+
