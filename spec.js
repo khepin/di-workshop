@@ -170,4 +170,42 @@ describe('di', function(){
             expect(di.get('how_old')).toBe(42);
         });
     });
+
+    describe('after step 4', function(){
+        it('should warn the user in a case of circular dependencies', function(){
+            var di = new Di();
+
+            function A(b){}
+            function B(a){}
+
+            A.inject = ['b']
+            B.inject = ['a']
+
+            di.set('a', A);
+            di.set('b', B);
+
+            expect(function(){
+                di.get('a');
+            }).toThrow(new Error('Circular dependencies.'));
+        });
+
+        it('should still allow multiple services to depend on the same one', function(){
+            var di = new Di();
+
+            function A(b){}
+            function B(a){}
+            function C(a){}
+
+            A.inject = ['b', 'c']
+            B.inject = ['c']
+
+            di.set('a', A);
+            di.set('b', B);
+            di.set('c', C);
+
+            expect(function(){
+                di.get('a');
+            }).not.toThrow(new Error('Circular dependencies.'));
+        });
+    });
 });

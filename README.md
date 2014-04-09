@@ -54,3 +54,75 @@ function Dog(){};
 di.set('dog', function(){return new Dog();});
 di.set('url', function(){return window.location;});
 ```
+You **might** have to modify the code that is currently in **di.js** as the solution from the previous step might not be enough for you at this step.
+
+## Step 3 (dependencies, NO circular ones)
+
+In this step, our services can have dependencies. The dependencies will be defined as follow:
+
+```js
+function Bean(){}
+function Grinder(){}
+function Water(){}
+
+di.set('bean', function(){return new Bean();});
+di.set('grinder', function(){return new Grinder();});
+di.set('water', function(){return new Water();});
+
+function makeCoffee(beans, grinder, water) {
+    // ...
+}
+makeCoffee.inject = ['bean', 'grinder', 'water'];
+
+di.set('coffee', makeCoffee);
+di.get('coffee');
+```
+
+You are not (yet) expected to deal with circular dependencies.
+
+## Step 4 (Dealing with circular dependencies)
+
+If the user defines circular dependencies, right now, this will put our container in an infinite loop. For example:
+
+```js
+function A(b){}
+function B(a){}
+
+A.inject = ['b']
+B.inject = ['a']
+
+di.set('a', A);
+di.set('b', B);
+
+di.get('a');
+```
+
+This would create an infinite loop.
+
+There is no way to resolve these dependencies correctly, but we can (and should) throw an error to let the user know that he is having a problem of circular dependencies.
+
+Note that the following example however is not a circular dependency and should be allowed to work
+
+```js
+var di = new Di();
+
+function A(b){}
+function B(a){}
+function C(a){}
+
+A.inject = ['b', 'c']
+B.inject = ['c']
+
+di.set('a', A);
+di.set('b', B);
+di.set('c', C);
+
+di.get('a');
+```
+
+At this step, we have added the lodash library for convenience. There are 2 functions you might need from that library, and here's how to use them:
+
+```js
+_.contains(['a', 'b', 'c'], 'c');  // Returns true if the array (first argument) contains the element (second argument)
+_.clone(object) // Returns a copy of the object / array / function that was passed to it.
+```
