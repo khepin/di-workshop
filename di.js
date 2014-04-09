@@ -50,7 +50,12 @@ function Di(){
             }
         }
 
-        return definition.creator.apply(undefined, arguments);
+        var value = definition.creator.apply(undefined, arguments);
+        if (definition.shared) {
+            definition.value = value;
+        }
+
+        return value;
     };
 
     /**
@@ -63,5 +68,18 @@ function Di(){
             creator: callable,
             dependencies: callable.inject
         };
+    };
+
+    /**
+     * Adds a shared service to the container
+     * @param {String} name
+     * @param {function} callable The function that will create the service
+     */
+    this.share = function(name, callable) {
+        this.definitions[name] = {
+            creator: callable,
+            dependencies: callable.inject,
+            shared: true
+        }
     };
 };
