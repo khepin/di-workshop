@@ -41,3 +41,16 @@ Our container will offer 3 ways to set a service to be shared. And we'll build t
 There will always be only one way to retrieve a service: **di.get(name)**.
 
 The goal of this step is to implement the simple constant and get method, without any dependencies (to be clear, it is not possible anyway to have constants and dependencies). The specs are already defined, all you have to do is fill in the necessary code in **di.js** in order to make the tests pass.
+
+## Step 2 (instantiable services, NO dependencies)
+
+In this step, we'll implement **di.set()** so that a service can be instantiated. Services are still instantiated without dependencies for now.
+
+**Note:** In languages that are not JavaScript, you would probably do things in a much different way. Eg: in Java, you would pass a fully qualified class name and instantiate an instance of the class to be a service. In JavaScript, a class and a function are the same thing. Because of this, our choice is that a service definition is always a function that will be called directly (without the **new** operator).
+
+```js
+function Dog(){};
+
+di.set('dog', function(){return new Dog();});
+di.set('url', function(){return window.location;});
+```

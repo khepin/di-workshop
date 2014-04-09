@@ -47,4 +47,44 @@ describe('di', function(){
             expect(di.get('function')).toBe(f);
         });
     });
+
+    describe('after step 2', function(){
+        it('can set and retrieve services', function(){
+            var di = new Di();
+
+            di.set('a', function(){
+                return 'a';
+            });
+
+            expect(di.get('a')).toBe('a');
+        });
+
+        it('lazily instantiates services', function(){
+            var di = new Di();
+            var counter = 0;
+
+            di.set('s', function(){
+                counter++;
+                return 's';
+            });
+
+            expect(counter).toBe(0);
+            expect(di.get('s')).toBe('s');
+            expect(counter).toBe(1);
+        });
+
+        it('instantiates a new service each time', function(){
+            var di = new Di();
+
+            function Dog() {};
+
+            di.set('dog', function(){
+                return new Dog();
+            });
+
+            var rufus = di.get('dog');
+
+            expect(di.get('dog')).not.toBe(rufus);
+        });
+    });
 });
