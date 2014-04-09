@@ -3,8 +3,6 @@
  */
 function Di(){
 
-    this.definitions = {};
-
     /**
      * Saves a constant in the container. The value can be anything (an
      * integer, a function, an object, null, undefined etc...)
