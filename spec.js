@@ -207,6 +207,24 @@ describe('di', function(){
                 di.get('a');
             }).not.toThrow(new Error('Circular dependencies.'));
         });
+
+        it('still allows a service to depend twice on the same dependency', function(){
+            var di = new Di();
+
+            function A(dep1, dep2, dep3){}
+            function B(){}
+            function C(){}
+
+            A.inject = ['b', 'b', 'c']
+
+            di.set('a', A);
+            di.set('b', B);
+            di.set('c', C);
+
+            expect(function(){
+                di.get('a');
+            }).not.toThrow(new Error('Circular dependencies.'));
+        });
     });
 
     describe('after step 5', function(){

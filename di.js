@@ -34,6 +34,11 @@ function Di(){
             return;
         }
 
+        if (_.contains(antiCircular, name)) {
+            throw new Error('Circular dependencies.');
+        }
+        antiCircular.push(name);
+
         if (definition.value) {
             return definition.value;
         }
@@ -42,10 +47,6 @@ function Di(){
         var arguments = [];
         if (dependencies) {
             for (var i = 0; i < dependencies.length; i++) {
-                if (_.contains(antiCircular, dependencies[i])) {
-                    throw new Error('Circular dependencies.');
-                }
-                antiCircular.push(dependencies[i]);
                 arguments.push(this._get(dependencies[i], _.clone(antiCircular)));
             }
         }
